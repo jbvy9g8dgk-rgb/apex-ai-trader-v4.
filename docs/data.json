@@ -1,0 +1,19 @@
+{
+  "mode": "PAPER",
+  "updated_at": null,
+  "state": {
+    "cash": 100,
+    "equity": 100,
+    "halted": false,
+    "positions": {},
+    "trades": [],
+    "equity_history": [
+      {
+        "equity": 100
+      }
+    ]
+  },
+  "markets": [],
+  "briefing": "Waiting for first scan. Run workflow manually.",
+  "traces": []
+}
