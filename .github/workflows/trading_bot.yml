@@ -1,1 +1,50 @@
+name: Apex V4 Trading Bot
 
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apex-v4-paper
+  cancel-in-progress: false
+
+jobs:
+  market-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Download APEX V4
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run APEX V4
+        run: python main.py
+
+      - name: Upload dashboard
+        uses: actions/upload-artifact@v4
+        with:
+          name: apex-v4-dashboard
+          path: docs/
+          retention-days: 7
+
+      - name: Save paper trading data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data.json paper_state.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update APEX V4 paper trading data"
+            git push
+          fi
